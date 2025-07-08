@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shivam Sah - AI Backend Engineer</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
     
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
@@ -1131,7 +1132,7 @@
                 
                 <div class="contact-item">
                     <i class="fas fa-envelope"></i>
-                    <span>shivamsah0502@gmail.com</span>
+                    <span>sah.sh@northeastern.edu</span>
                 </div>
                 
                 <div class="contact-item">
@@ -1181,12 +1182,100 @@
     <footer>
         <div class="social-links">
             <a href="https://github.com/alkaline07"><i class="fab fa-github"></i></a>
-            <a href="mailto:shivamsah0502@gmail.com"><i class="fas fa-envelope"></i></a>
+            <a href="mailto:sah.sh@northeastern.edu"><i class="fas fa-envelope"></i></a>
         </div>
         <p>&copy; 2025 Shivam Sah. Crafted with passion for AI-powered backend engineering.</p>
     </footer>
 
     <script>
+        // Wait for EmailJS to load, then initialize
+        window.addEventListener('load', function() {
+            // Check if EmailJS is loaded
+            if (typeof emailjs !== 'undefined') {
+                // Initialize EmailJS
+                emailjs.init("hUlnqkDUWmacFT5sr"); // Replace with your EmailJS public key
+                console.log('EmailJS initialized successfully');
+            } else {
+                console.warn('EmailJS failed to load. Contact form will use mailto fallback.');
+            }
+        });
+
+        // Contact form handling with EmailJS
+        document.addEventListener('DOMContentLoaded', function() {
+            const contactForm = document.getElementById('contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const submitBtn = document.getElementById('submit-btn');
+                    const formMessage = document.getElementById('form-message');
+                    
+                    // Show loading state
+                    submitBtn.classList.add('btn-loading');
+                    submitBtn.disabled = true;
+                    formMessage.classList.remove('show', 'success', 'error');
+                    
+                    // Check if EmailJS is available
+                    if (typeof emailjs !== 'undefined') {
+                        // Send email using EmailJS
+                        emailjs.sendForm('service_fadw38c', 'template_smq9db5', this)
+                            .then(function(response) {
+                                console.log('SUCCESS!', response.status, response.text);
+                                showMessage('🎉 Thank you! Your message has been sent successfully. I\'ll get back to you soon!', 'success');
+                                contactForm.reset();
+                            }, function(error) {
+                                console.log('EmailJS FAILED...', error);
+                                // Fallback to mailto if EmailJS fails
+                                handleFallbackEmail();
+                            })
+                            .finally(function() {
+                                // Reset button state
+                                submitBtn.classList.remove('btn-loading');
+                                submitBtn.disabled = false;
+                            });
+                    } else {
+                        // EmailJS not loaded, use fallback immediately
+                        console.log('EmailJS not loaded, using mailto fallback');
+                        handleFallbackEmail();
+                        submitBtn.classList.remove('btn-loading');
+                        submitBtn.disabled = false;
+                    }
+                });
+            }
+        });
+
+        // Fallback to mailto if EmailJS fails
+        function handleFallbackEmail() {
+            const formData = new FormData(document.getElementById('contact-form'));
+            const name = formData.get('from_name');
+            const email = formData.get('from_email');
+            const subject = formData.get('subject');
+            const message = formData.get('message');
+            
+            const mailtoLink = `mailto:sah.sh@northeastern.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
+            
+            window.location.href = mailtoLink;
+            showMessage('📧 Your email client should open now. If not, please email me directly at sah.sh@northeastern.edu', 'success');
+        }
+
+        // Show form message
+        function showMessage(text, type) {
+            const formMessage = document.getElementById('form-message');
+            if (formMessage) {
+                formMessage.textContent = text;
+                formMessage.className = `form-message ${type}`;
+                
+                setTimeout(() => {
+                    formMessage.classList.add('show');
+                }, 100);
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    formMessage.classList.remove('show');
+                }, 5000);
+            }
+        }
+
         // Tab switching functionality
         function switchTab(tabName) {
             // Hide all tab contents
@@ -1271,30 +1360,6 @@
                 nav.style.background = 'rgba(0, 0, 0, 0.9)';
             }
         }
-
-        // Contact form handling
-        document.querySelector('form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(e.target);
-            const name = formData.get('name');
-            const email = formData.get('email');
-            const subject = formData.get('subject');
-            const message = formData.get('message');
-            
-            // Create mailto link
-            const mailtoLink = `mailto:sah.sh@northeastern.edu?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`)}`;
-            
-            // Open email client
-            window.location.href = mailtoLink;
-            
-            // Show confirmation
-            alert('Thank you for your message! Your email client should open now.');
-            
-            // Reset form
-            e.target.reset();
-        });
 
         // Initialize
         window.addEventListener('load', () => {
