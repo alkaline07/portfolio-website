@@ -1,0 +1,31 @@
+{
+  "name": "shivam-portfolio",
+  "version": "1.0.0",
+  "description": "Shivam Sah's Professional Portfolio - AI Backend Engineer",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "engines": {
+    "node": "18.x"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "path": "^0.12.7"
+  },
+  "keywords": [
+    "portfolio",
+    "backend",
+    "ai",
+    "engineer",
+    "nodejs",
+    "heroku"
+  ],
+  "author": "Shivam Sah",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alkaline07/portfolio"
+  }
+}
