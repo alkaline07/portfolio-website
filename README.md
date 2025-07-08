@@ -123,7 +123,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 - **Email**: sah.sh@northeastern.edu
 - **GitHub**: [alkaline07](https://github.com/alkaline07)
-- **LinkedIn**: [Connect with me](https://linkedin.com/in/shivamdoes)
+- **LinkedIn**: [Connect with me](https://linkedin.com/in/ssah)
 
 ---
 
