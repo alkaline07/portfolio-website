@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shivam Sah - AI Backend Engineer</title>
 
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-MHZEHB5JFB"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-MHZEHB5JFB');
+    </script>
+
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><defs><linearGradient id=%22grad%22 x1=%220%%22 y1=%220%%22 x2=%22100%%22 y2=%22100%%22><stop offset=%220%%22 style=%22stop-color:%23ff6b6b%22/><stop offset=%2250%%22 style=%22stop-color:%234ecdc4%22/><stop offset=%22100%%22 style=%22stop-color:%236c5ce7%22/></linearGradient></defs><circle cx=%2250%22 cy=%2250%22 r=%2245%22 fill=%22url(%23grad)%22/><text x=%2250%22 y=%2260%22 font-family=%22Arial,sans-serif%22 font-size=%2240%22 font-weight=%22bold%22 text-anchor=%22middle%22 fill=%22white%22>SS</text></svg>" type="image/svg+xml">
 
@@ -1305,6 +1314,14 @@
             submitBtn.disabled = true;
             formMessage.classList.remove('show', 'success', 'error');
             
+            // Track form submission with Google Analytics
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'form_submit', {
+                    event_category: 'Contact',
+                    event_label: 'Portfolio Contact Form'
+                });
+            }
+            
             // Check if EmailJS is available
             if (emailJSInitialized && typeof emailjs !== 'undefined') {
                 emailjs.sendForm('service_fadw38c', 'template_smq9db5', e.target)
@@ -1312,10 +1329,26 @@
                         console.log('SUCCESS!', response.status, response.text);
                         showMessage('🎉 Thank you! Your message has been sent successfully. I\'ll get back to you soon!', 'success');
                         e.target.reset();
+                        
+                        // Track successful form submission
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'form_submit_success', {
+                                event_category: 'Contact',
+                                event_label: 'Portfolio Contact Form Success'
+                            });
+                        }
                     })
                     .catch(function(error) {
                         console.log('EmailJS sending failed:', error);
                         handleFallbackEmail(e.target);
+                        
+                        // Track form submission error
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'form_submit_error', {
+                                event_category: 'Contact',
+                                event_label: 'Portfolio Contact Form Error'
+                            });
+                        }
                     })
                     .finally(function() {
                         submitBtn.classList.remove('btn-loading');
@@ -1368,6 +1401,14 @@
             overlay.classList.toggle('active');
             
             document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : 'auto';
+            
+            // Track menu interaction
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'menu_toggle', {
+                    event_category: 'Navigation',
+                    event_label: navMenu.classList.contains('active') ? 'Open' : 'Close'
+                });
+            }
         }
 
         function closeMenu() {
@@ -1385,6 +1426,14 @@
         function switchTab(tabName) {
             const tabContents = document.querySelectorAll('.tab-content');
             const tabButtons = document.querySelectorAll('.tab-button');
+            
+            // Track tab interaction
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'tab_switch', {
+                    event_category: 'Engagement',
+                    event_label: tabName
+                });
+            }
             
             // Use requestAnimationFrame for smooth transitions
             requestAnimationFrame(() => {
@@ -1438,6 +1487,28 @@
                     if (target) {
                         closeMenu();
                         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        
+                        // Track navigation clicks
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'navigation_click', {
+                                event_category: 'Navigation',
+                                event_label: this.getAttribute('href').substring(1)
+                            });
+                        }
+                    }
+                });
+            });
+        });
+
+        // Track CTA button clicks
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'cta_click', {
+                            event_category: 'CTA',
+                            event_label: this.textContent.trim()
+                        });
                     }
                 });
             });
@@ -1479,6 +1550,32 @@
             }
         }
 
+        // Track scroll depth
+        let scrollDepthTracked = {
+            25: false,
+            50: false,
+            75: false,
+            100: false
+        };
+
+        function trackScrollDepth() {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = Math.round((scrollTop / docHeight) * 100);
+            
+            Object.keys(scrollDepthTracked).forEach(depth => {
+                if (scrollPercent >= depth && !scrollDepthTracked[depth]) {
+                    scrollDepthTracked[depth] = true;
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'scroll_depth', {
+                            event_category: 'Engagement',
+                            event_label: `${depth}%`
+                        });
+                    }
+                }
+            });
+        }
+
         // Event listeners with passive option for better performance
         document.addEventListener('click', function(event) {
             const hamburger = document.getElementById('hamburger');
@@ -1510,6 +1607,7 @@
         window.addEventListener('scroll', () => {
             optimizedAnimateOnScroll();
             optimizedUpdateNavbar();
+            trackScrollDepth();
         }, { passive: true });
 
         // Preload critical resources
